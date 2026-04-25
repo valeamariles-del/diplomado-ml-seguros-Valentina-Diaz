@@ -1,8 +1,2 @@
-# Diplomado ML Seguros
+# diplomado-ml-seguros-Valentina-Diaz
 
-Este repositorio contiene los notebooks del módulo 1 del diplomado.
-
-
-
-## Autor
-Valentina Díaz
