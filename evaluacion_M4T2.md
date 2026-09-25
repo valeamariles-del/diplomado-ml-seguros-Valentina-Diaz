@@ -35,13 +35,24 @@
 **P1.** ¿Se cumple la equidispersión? Justifica con φ **y** con Cameron-Trivedi, y di qué familia usarías.
 **Tu respuesta:**
 
+No se cumple la equidispersión: φ de Pearson = 1.1664, es > 1 lo cual nos indica una sobredispersión leve. Cameron-Trivedi también la confirma, con α = 0.0744 y p-value = 3.7e-56, por lo que se rechazamos la equidispersión. 
+Dado que φ < 1.5, utilizaría la familia QuasiPoisson, ya que permite corregir la varianza sin requerir una Binomial Negativa. 
+
 **P2.** Interpreta los rating factors de tu variable: nivel más alto y más bajo, traducidos a % de
 recargo/descuento. ¿Algún IC cruza 1 o tiene p > 0.05? ¿Qué harías con ese nivel?
 **Tu respuesta:**
 
+El RF más alto es el de (70,250], con 1.0262, equivalente a un recargo de
+2.62% en frecuencia respecto a la referencia. El más bajo es (9,40], con 0.9100, equivalente a un descuento de 9.0%. 
+Los IC de (50,60], (60,70] y (70,250] cruzan 1 y sus p-values son mayores a 
+0.05, por lo que no presentan evidencia estadística suficiente de diferencia respecto a la referencia. Con esto, se deberían agrupar con ella.
+
 **P3.** ¿Por qué el GLM one-way reproduce exactamente la tasa empírica, y qué aporta el GLM que una
 tabla empírica no puede dar?
 **Tu respuesta:**
+
+El GLM Poisson con liga log y offset reproduce la tasa empírica porque las ecuaciones de score obligan a que la suma de siniestros predichos por nivel coincida con la observada. 
+Además, el GLM permite combinar varias variables simultáneamente de forma multiplicativa y obtener intervalos de confianza para sus efectos, algo que una tabla empírica no proporciona.
 
 ---
 
@@ -68,13 +79,20 @@ tabla empírica no puede dar?
 propiedad del CV y por qué Lognormal no es GLM).
 **Tu respuesta:**
 
+Porque permite modelar montos positivos y supone un coeficiente de variación constante, es decir, una variabilidad relativa estable entre niveles. La Lognormal no pertenece a la familia exponencial natural requerida por un GLM. Además, modelar log(Y) estima E[log(Y)] y no directamente E[Y], por lo que requiere una corrección al regresar a la escala original. La Gamma con liga log modela directamente E[Y].
+
 **P5.** Según la tabla de comparación, ¿qué modelo elegirías? Justifica con AIC/BIC. ¿Por qué el pseudo R²
 es tan bajo y eso NO significa que el modelo sea malo?
 **Tu respuesta:**
 
+Elegiría la Binomial Negativa, ya que presenta menor AIC (124,925.7) y menor BIC (125,105.8). El pseudo R2 de aproximadamente 0.021 no implica que el modelo sea malo, ya que la frecuencia de siniestros contiene una importante variabilidad aleatoria que no puede explicarse mediante las variables observadas. Por ello, es más relevante comparar modelos y evaluar su capacidad de discriminación.
+
 **P6.** Compara tus rating factors de frecuencia (Parte 1) con los de severidad para `potencia_cat`. ¿Apuntan en
 la misma dirección? ¿Qué implica eso para separar Frecuencia × Severidad?
 **Tu respuesta:**
+
+Los efectos de potencia_cat son diferentes entre frecuencia y severidad. En frecuencia, el RF va de 0.9100 para (9,40] hasta 1.0262 para (70,250], mientras que en severidad los factores se mantienen muy cercanos a 1, entre 
+0.9210 y 1.0364. Esto nos indica que la potencia tiene un efecto más limitado sobre la severidad y distinto al observado en frecuencia. Por ello es conveniente modelar Frecuencia × Severidad por separado.
 
 ---
 
@@ -101,13 +119,19 @@ la misma dirección? ¿Qué implica eso para separar Frecuencia × Severidad?
 bien el riesgo (Gini)? ¿Qué mide cada una?
 **Tu respuesta:**
 
+El ratio pred/obs de 1.0249, cercano a 1, indica que el modelo está bien calibrado en promedio, ya que el número de siniestros predicho es muy similar al observado. El Gini de 0.2315 mide la discriminación, es decir, la capacidad del modelo para diferenciar riesgos de menor y mayor frecuencia. Al ser inferior a 0.30, la discriminación es modesta. Por tanto, el modelo calibra bien, aunque su capacidad para separar riesgos es limitada.
+
 **P8.** Lee la tabla de tarifa: ¿qué nivel de tu variable paga la prima pura más alta y cuál la más baja?
 Traduce el factor de tarifa a un recargo/descuento sobre la prima promedio.
 **Tu respuesta:**
 
+La prima pura más alta corresponde a (70,250], con $203.06 y un factor de tarifa de 1.1137, que representa un recargo de 11.37% sobre la prima promedio. La más baja corresponde a (50,60], con $168.85 y un factor de 0.9260, equivalente a un descuento de 7.40%. Esto refleja que la combinación de frecuencia y severidad genera diferencias moderadas en la prima pura entre categorías de potencia.
+
 **P9. (Conclusión de nota técnica).** En 3–4 líneas, redacta cómo `potencia_cat` afecta la tarifa, integrando
 frecuencia, severidad y prima pura, en estilo defendible ante la CNSF.
 **Tu respuesta:**
+
+La variable potencia_cat presenta un efecto moderado sobre la tarifa, con diferencias más visibles en frecuencia que en severidad. El grupo (70,250] presenta el mayor factor de frecuencia (1.0262; IC 95% [0.9816, 1.0729]), aunque su intervalo incluye 1. Al combinar frecuencia y severidad, este grupo alcanza la prima pura más alta, con $203.06 y un factor tarifario de 1.1137, mientras que (50,60] presenta la más baja, con un factor de 0.9260.
 
 ---
 *Evaluación generada automáticamente · Diplomado ML en Seguros · FC UNAM · Módulo 4 · Tema 2*
